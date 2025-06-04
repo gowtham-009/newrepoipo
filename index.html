@@ -1,69 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>IPO Responsive View</title>
-    <style>
-        #content-container {
-            width: 100%;
-            min-height: 100vh;
-            transition: opacity 0.3s ease;
-        }
-        .loading {
-            opacity: 0.5;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IPO Redirect</title>
+  <script>
+    function loadIPOPage() {
+      const width = window.innerWidth;
+
+      // Determine which version to load
+      if (width < 992) {
+        window.location.href = "mobile/ipo.html";
+      } else {
+        window.location.href = "desktop/ipo.html";
+      }
+    }
+
+    // Redirect on page load
+    window.onload = loadIPOPage;
+
+    // Optional: Add this if you want to redirect again on resize
+    window.onresize = function () {
+      // Prevent constant reload
+      const currentPath = window.location.pathname;
+      const width = window.innerWidth;
+
+      if (width < 992 && !currentPath.includes("mobile/ipo.html")) {
+        window.location.href = "mobile/ipo.html";
+      } else if (width >= 992 && !currentPath.includes("desktop/ipo.html")) {
+        window.location.href = "desktop/ipo.html";
+      }
+    };
+  </script>
 </head>
 <body>
-    <div id="content-container"></div>
-
-    <script>
-        const container = document.getElementById('content-container');
-        let currentView = '';
-        
-        async function loadContent(view) {
-            try {
-                container.classList.add('loading');
-                const response = await fetch(`${view}/ipo.html`);
-                const html = await response.text();
-                container.innerHTML = html;
-                currentView = view;
-                
-                // Re-initialize any scripts from the loaded content
-                const scripts = container.querySelectorAll('script');
-                scripts.forEach(script => {
-                    const newScript = document.createElement('script');
-                    if (script.src) {
-                        newScript.src = script.src;
-                    } else {
-                        newScript.textContent = script.textContent;
-                    }
-                    script.parentNode.replaceChild(newScript, script);
-                });
-                
-            } catch (error) {
-                console.error('Error loading content:', error);
-                container.innerHTML = `<p>Error loading ${view} view</p>`;
-            } finally {
-                container.classList.remove('loading');
-            }
-        }
-        
-        function checkViewport() {
-            const newView = window.innerWidth >= 992 ? 'desktop' : 'mobile';
-            if (newView !== currentView) {
-                loadContent(newView);
-            }
-        }
-        
-        // Initial load
-        checkViewport();
-        
-        // Debounced resize handler
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(checkViewport, 100);
-        });
-    </script>
+  <p>Redirecting to IPO view...</p>
 </body>
 </html>
